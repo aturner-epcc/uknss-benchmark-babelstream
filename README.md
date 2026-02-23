@@ -1,4 +1,4 @@
-# UK-NSS BabelStream benchmark
+# UK-NNSS BabelStream benchmark
 
 **Note:** This benchmark/repository is closely based on the one used for the [NERSC-10 benchmarks](https://www.nersc.gov/systems/nersc-10/benchmarks/)
 
@@ -17,17 +17,6 @@ Stable
 ### Software
 
 - [BabelStream](https://github.com/UoB-HPC/BabelStream)
-
-### Architectures
-
-- CPU: x86, Arm
-- GPU: NVIDIA, AMD, Intel
-
-### Languages and programming models
-
-- Programming languages: C++
-- Parallel models: OpenMP
-- Accelerator offload models: CUDA, HIP, OpenACC, Kokkos, SYCL, RAJA, OpenCL, TBB
 
 ## Building the benchmark
 
