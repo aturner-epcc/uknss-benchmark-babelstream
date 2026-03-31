@@ -4,17 +4,6 @@
 
 The BabelStream benchmark was developed at the University of Bristol to measure the achievable main memory bandwidth across variety of CPUs and GPUs using simple kernels. These kernels process data that is larger than the largest level of cache so that transfers from main memory are always in play. Dynamically allocated arrays are used to prevent any compile time optimisations. BabelStream provides implementations in multiple programming models for CPUs and GPUs. When used for GPUs, this benchmark does not include the data transfer time for CPU-GPU transfers.
 
-## Status
-
-Stable
-
-## Maintainers
-
-- @aturner-epcc ([https://github.com/aturner-epcc](https://github.com/aturner-epcc))
-
-**Important:** Please do not contact the benchmark maintainers directly with any questions.
-All questions on the benchmark must be submitted via the procurement response mechanism.
-
 ## Software
 
 - [BabelStream](https://github.com/UoB-HPC/BabelStream)
