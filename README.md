@@ -41,7 +41,7 @@ Compiling the code involves the following steps:
    |----------------|--------------------|
    | OpenMP         | `-DMODEL=omp`        |
    | OpenMP-offload | `-DMODEL=omp -DCMAKE_CXX_COMPILER=nvc++ \` <br> `-DOFFLOAD=ON -DOFFLOAD_FLAGS="-mp=gpu -gpu=cc90 \` <br> `-Minfo"` |
-   | CUDA           | `-DMODEL=cuda -DCMAKE_CXX_COMPILER=nvc++ \ <br> -DCMAKE_CUDA_COMPILER=nvcc -DCUDA_ARCH=sm_90` |
+   | CUDA           | `-DMODEL=cuda -DCMAKE_CXX_COMPILER=nvc++ \` <br> `-DCMAKE_CUDA_COMPILER=nvcc -DCUDA_ARCH=sm_90` |
 
 2. Perform the build
    ```bash
