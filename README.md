@@ -1,26 +1,57 @@
 # UK-NNSS BabelStream benchmark
 
-**Note:** This benchmark/repository is closely based on the one used for the [NERSC-10 benchmarks](https://www.nersc.gov/systems/nersc-10/benchmarks/)
+This repository contains information on the Babelstream benchmark for the
+UK NNSS procurement.
 
+> [!IMPORTANT]
+> Please do not contact the benchmark or code maintainers directly with any questions. All questions must be submitted via the procurement response mechanism.
+
+## Benchmark Overview
 The BabelStream benchmark was developed at the University of Bristol to measure the achievable main memory bandwidth across variety of CPUs and GPUs using simple kernels. These kernels process data that is larger than the largest level of cache so that transfers from main memory are always in play. Dynamically allocated arrays are used to prevent any compile time optimisations. BabelStream provides implementations in multiple programming models for CPUs and GPUs. When used for GPUs, this benchmark does not include the data transfer time for CPU-GPU transfers.
 
 ## Software
 
-- [BabelStream](https://github.com/UoB-HPC/BabelStream)
+Git repository: [BabelStream](https://github.com/UoB-HPC/BabelStream)
+
+> [!CAUTION]
+> All results submitted should be based on the following tag:
+>- [BabelStream v5.0](https://github.com/UoB-HPC/BabelStream/releases/tag/v5.0)
+
+> [!NOTE] 
+> This benchmark/repository is closely based on the one used for the [NERSC-10 benchmarks](https://www.nersc.gov/systems/nersc-10/benchmarks/)
+
 
 ## Building the benchmark
 
-**Important:** All results submitted should be based on the following version:
+Compiling the code involves the following steps:
 
-- [BabelStream v5.0](https://github.com/UoB-HPC/BabelStream/releases/tag/v5.0)
+1. Configure the build
+   ```bash
+   cmake -B build -S . -DMODEL=<model> <CMAKE_OPTIONS>
+   ```
+   where `<model>` should be substituted with one of the programming models
+   implemented in the current version of BabelStream. Current options for `<model>` are:
+   > omp; ocl; std; std20; hip; cuda; kokkos; sycl; sycl2020; acc; raja; 
+     tbb; thrust
+  
+   Additional CMake variables may be needed for some programming models.
+   For example,
 
-Any modifications made to the source code and build/installation files must be 
-shared as part of the bidder submission under the same licence as the BabelStream
-software.
+   |  Configuration | Flags              |
+   |----------------|--------------------|
+   | OpenMP         | `-DMODEL=omp`        |
+   | OpenMP-offload | `-DMODEL=omp -DCMAKE_CXX_COMPILER=nvc++ \` <br> `-DOFFLOAD=ON -DOFFLOAD_FLAGS="-mp=gpu -gpu=cc90 \` <br> `-Minfo"` |
+   | CUDA           | `-DMODEL=cuda -DCMAKE_CXX_COMPILER=nvc++ \ <br> -DCMAKE_CUDA_COMPILER=nvcc -DCUDA_ARCH=sm_90` |
 
-## Permitted modifications
+2. Perform the build
+   ```bash
+   cmake --build build
+   ```
 
-Offerors are permitted to modify the benchmark in the following ways.
+
+### Pre-approved code modifications
+
+Bidders are permitted to modify the benchmark in the following ways.
 
 **Programming Pragmas**
 
@@ -41,106 +72,9 @@ Offerors are permitted to modify the benchmark in the following ways.
 Any modifications must be fully documented (e.g., as a pull request, diff or patch file)
 and reported with the benchmark results.
 
-### Manual build
 
-The Babelstream source code can be obtained from:
-https://github.com/UoB-HPC/BabelStream.git using:
-
-```bash
-git clone https://github.com/UoB-HPC/BabelStream.git .
-```
-
-Move into the repo directory and checkout v5.0:
-
-```bash
-cd BabelStream
-git checkout v5.0
-```
-
-The series of commands to configure and build BabelStream is
-```bash
-mkdir build
-cd build
-cmake -DMODEL=<model> <CMAKE_OPTIONS> ../
-make
-```
-where `<model>` should be substituted with one of
-the programming models implemented in the current version of BabelStream<br>
-( omp; ocl; std; std20; hip; cuda; kokkos;
-  sycl; sycl2020; acc; raja; tbb; thrust )
-  
-
-Additional CMake variables may be needed for some programming models.
-For example,
-<table><tr><th> OpenMP </th><th> OpenMP-offload </th><th> CUDA </th><tr>
-<tr><td>
-
-```bash
-cmake \
--DMODEL=omp \
-../ 
-```
-
-</td><td>
-
-```bash
-cmake \
--DMODEL=omp \
--DCMAKE_CXX_COMPILER=nvc++ \
--DOFFLOAD=ON \
--DOFFLOAD_FLAGS="-mp=gpu -gpu=cc90 -Minfo" \
-../ 
-```
-
-</td><td>
-
-```bash
-cmake \
--DMODEL=cuda \
--DCMAKE_CXX_COMPILER=nvc++ \
--DCMAKE_CUDA_COMPILER=nvcc \
--DCUDA_ARCH=sm_90 \
-../ 
-```
-
-</td></tr></table>
 
 ## Running the benchmark
-
-### Required tests
-
-The bidder is required to run the following tests
-
-- CPU memory bandwidth:
-  + Single node runs across all compute nodes.
-  + All CPU cores must be running BabelStream in parallel via OpenMP threads
-    or another parallel model implemented in BabelStream.
-  + The sizes of the allocated arrays in BabelStream must be
-    4x larger than the largest level of cache. This can be set at run time
-    using the `--arraysize` option to BabelStream.
-  + A minimum of 100 iterations (BabelStream default) must be used for the test.
-  + The difference between the maximum measured per-node Triad memory
-    bandwidth and the minimum measured per-node Triad memory bandwidth
-    must be equal to or less than 5% of the mean measured per-node
-    Triad memory bandwidth.
-
-- GPU memory bandwidth:
-  + Arrays should only be allocated on device's global memory,
-    any pre-staging of data or use of user controlled cache is not allowed.
-  + Must be run across all compute nodes.
-  + Performance of all GPU/GCD on each node should be tested. The `--devices`
-    option to BabelStream may be used to target specific GPU/GCD on a 
-    node.
-  + A minimum of 100 iterations (BabelStream default) must be used for the test.
-  + The sizes of the allocated arrays in BabelStream must be
-    4x larger than the largest level of cache. This can be set at run time
-    using the `--arraysize` option to BabelStream .
-  + The difference between the maximum measured per-GPU/GCD Triad memory
-    bandwidth and the minimum measured per-GPU/GCD Triad memory bandwidth
-    must be equal to or less than 5% of the mean measured per-GPU/GCD
-    Triad memory bandwidth.
-
-### Benchmark execution
 
 The BabelStream executable, `<model>-stream`, can be found in the `build` directory.
 The following arguments will typically be used to modify its runtime behaviour:
@@ -152,32 +86,65 @@ The following arguments will typically be used to modify its runtime behaviour:
   memory tests). This option can be used to ensure all accelerator devices on 
   a node are tested.
 
-We supply example job submission scripts from testing on the [IsambardAI](https://docs.isambard.ac.uk/specs/#system-specifications-isambard-ai-phase-2) system:
+### Benchmark execution
+
+The benchmark can be used to test both CPU and GPU memory bandwidth.
+
+- CPU memory bandwidth:
+  + All CPU cores must be running BabelStream in parallel via OpenMP threads
+    or another parallel model implemented in BabelStream.
+  + The size of the allocated arrays in BabelStream must be
+    4x larger than the largest level of cache. This can be set at run time
+    using the `--arraysize` option to BabelStream.
+  + A minimum of 100 iterations (BabelStream default) must be used for the test.
+
+- GPU memory bandwidth:
+  + Arrays should only be allocated on device's global memory,
+    any pre-staging of data or use of user controlled cache is not allowed.
+  + Performance of all GPU/GCD on each node should be tested. The `--devices`
+    option to BabelStream may be used to target specific GPU/GCD on a 
+    node.
+  + A minimum of 100 iterations (BabelStream default) must be used for the test.
+  + The size of the allocated arrays in BabelStream must be
+    4x larger than the largest level of cache. This can be set at run time
+    using the `--arraysize` option to BabelStream .
+
+Example job submission scripts from testing on the [IsambardAI](https://docs.isambard.ac.uk/specs/#system-specifications-isambard-ai-phase-2) system are available below:
 
 - [IsambardAI CPU bandwidth](run_cpu_isambardai.sh)
 - [IsambardAI GPU bandwidth](run_cuda_isambardai.sh)
 
-## Reporting results
+## Results
 
-The primary figure of merit (FoM) is the Triad rate (MB/s).
+### Reference data
 
-The bidder should provide:
+Reference data from IsambardAI.
 
-- The minimum, maximum and mean Triad rate across all nodes/devices
-  for the two test configurations
-- Details of any changes made to the BabelStream source code
-  and modifications to any build files (e.g. configure scripts, makefiles)
-- Details of the build process for the BabelStream software 
-  for both the host (CPU) and device (GPU) versions
-- Details on how the tests were run, including any batch job submission
-  scripts and options provided to BabelStream at runtime
-- All data printed to STDOUT by the BabelStream software for 
-  all runs of the benchmark on all nodes
+**CPU**
+```
+Init: 0.143378 s (=186051.867106 MBytes/sec)
+Read: 0.485833 s (=54907.321568 MBytes/sec)
+Function    MBytes/sec  Min (sec)   Max         Average     
+Copy        1751638.946 0.01015     0.03203     0.01082     
+Mul         1665577.965 0.01068     0.03715     0.01118     
+Add         1703432.068 0.01566     0.01654     0.01612     
+Triad       1730906.365 0.01541     0.03137     0.01633     
+Dot         1577779.397 0.01127     0.01659     0.01161
+```
 
-## Example performance data
+**GPU**
+```
+Init: 0.353618 s (=75436.650631 MBytes/sec)
+Read: 0.006928 s (=3850606.492995 MBytes/sec)
+Function    MBytes/sec  Min (sec)   Max         Average     
+Copy        3216728.170 0.00553     0.00553     0.00553     
+Mul         3210095.526 0.00554     0.00555     0.00554     
+Add         3528340.308 0.00756     0.00758     0.00757     
+Triad       3534593.282 0.00755     0.00756     0.00755     
+Dot         3731714.822 0.00477     0.00481     0.00478     
+```
 
-Example performance data from IsambardAI.
-
+Full output for the above runs is available here:
 - [IsambardAI CPU memory performance](example_output/BabelStream-CPU-2345261.out)
 - [IsambardAI GPU memory performance](example_output/BabelStream-CUDA-2344898.out)
 
