@@ -118,36 +118,33 @@ Example job submission scripts from testing on the [IsambardAI](https://docs.isa
 
 ### Reference data
 
-Reference data from IsambardAI.
+#### IsambardAI (GH200)
 
-**CPU**
-```
-Init: 0.143378 s (=186051.867106 MBytes/sec)
-Read: 0.485833 s (=54907.321568 MBytes/sec)
-Function    MBytes/sec  Min (sec)   Max         Average     
-Copy        1751638.946 0.01015     0.03203     0.01082     
-Mul         1665577.965 0.01068     0.03715     0.01118     
-Add         1703432.068 0.01566     0.01654     0.01612     
-Triad       1730906.365 0.01541     0.03137     0.01633     
-Dot         1577779.397 0.01127     0.01659     0.01161
-```
-
-**GPU**
-```
-Init: 0.353618 s (=75436.650631 MBytes/sec)
-Read: 0.006928 s (=3850606.492995 MBytes/sec)
-Function    MBytes/sec  Min (sec)   Max         Average     
-Copy        3216728.170 0.00553     0.00553     0.00553     
-Mul         3210095.526 0.00554     0.00555     0.00554     
-Add         3528340.308 0.00756     0.00758     0.00757     
-Triad       3534593.282 0.00755     0.00756     0.00755     
-Dot         3731714.822 0.00477     0.00481     0.00478     
-```
+| Target | Function | Performance (MBytes/sec) |
+|--------|----------|--------------------------|
+| CPU    | Triad    | 1730906.365              |
+| GPU    | Triad    | 3534593.282              |
 
 Full output for the above runs is available here:
 - [IsambardAI CPU memory performance](example_output/BabelStream-CPU-2345261.out)
 - [IsambardAI GPU memory performance](example_output/BabelStream-CUDA-2344898.out)
 
+#### Hunter (Mi300A)
+
+| Target | Function | Performance (MBytes/sec) |
+|--------|----------|--------------------------|
+| CPU    | Triad    |  814440.071              |
+| GPU    | Triad    | 3338518.799              |
+
+
 ## License
 
 This benchmark description and associated files are released under the MIT license.
+
+## Changelog
+
+The following changes to this document have been made since initial release:
+
+| <div style="width:90px">Date</div> | Change |
+|-----------:|--------|
+| 2026-04-29 | Updates to Hunter reference data |
