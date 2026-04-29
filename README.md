@@ -140,3 +140,11 @@ Full output for the above runs is available here:
 ## License
 
 This benchmark description and associated files are released under the MIT license.
+
+## Changelog
+
+The following changes to this document have been made since initial release:
+
+| <div style="width:90px">Date</div> | Change |
+|-----------:|--------|
+| 2026-04-29 | Updates to Hunter reference data |
